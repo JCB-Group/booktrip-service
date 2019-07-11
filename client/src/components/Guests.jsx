@@ -17,7 +17,13 @@ class Guests extends React.Component {
             let {max} = this.state;
             let sum = guests + change;
             if (0 < sum && sum <= max) {
-                this.setState({adults: adults + change});
+                new Promise((resolve, reject) => {
+                    this.setState({adults: adults + change});
+                    resolve();
+                }).then(() => {
+                    let {adults, children, infants} = this.state;
+                    this.props.updateCheckoutState('guests', {adults, children, infants})
+                })
             }
         }
     }
@@ -28,7 +34,13 @@ class Guests extends React.Component {
             let guests = this.state.adults + this.state.children;
             let sum = guests + change;
             if (0 < sum && sum <= max) {
-                this.setState({children: children + change});
+                new Promise((resolve, reject) => {
+                    this.setState({children: children + change});
+                    resolve();
+                }).then(() => {
+                    let {adults, children, infants} = this.state;
+                    this.props.updateCheckoutState('guests', {adults, children, infants})
+                })
             }
         }
     }
@@ -38,7 +50,13 @@ class Guests extends React.Component {
             let {infants} = this.state;
             let sum = infants + change;
             if (0 <= sum && sum <= 5) {
-                this.setState({infants: sum});
+                new Promise((resolve, reject) => {
+                    this.setState({infants: sum});
+                    resolve();
+                }).then(() => {
+                    let {adults, children, infants} = this.state;
+                    this.props.updateCheckoutState('guests', {adults, children, infants})
+                })
             }
         }
     }

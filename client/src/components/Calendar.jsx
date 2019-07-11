@@ -5,12 +5,11 @@ const getDatesBetween = require('../helpers/getDatesBetween.js');
 const _ = require('underscore');
 const $ = require('jquery');
 
-// let realBookedData = {
-//     [new Date(2019, 6, 5)]: true,
-//     [new Date(2019, 6, 18)]: true,
-//     [new Date(2019, 6, 19)]: true,
-//     [new Date(2019, 6, 20)]: true,
-// };
+let style = {
+
+};
+
+
 
 let realBookedData = {};
 
@@ -214,25 +213,38 @@ class Calendar extends React.Component {
     }
 
     clearDates() {
-        return new Promise((resolve, reject) => {
-            selected = {};
-            this.setState({
-                task: 'checkingIn', 
-                checkin: false, 
-                checkout: false,
-                stopCheckoutsHere: false,
-                startCheckinsHere: false,
-                currentDate: new Date()
-            });
-            resolve();
-        }).then(() => this.handleDisplayMonth())
-        .then(() => this.props.updateCheckoutState('clearAll'))
-        
+        $.ajax({
+            method: 'get',
+            url: '/dates',
+            success: (res) => {
+                _.each(res, (nested) => {
+                    let str = nested.date;
+                    let dateFromServer = new Date(str);
+                    realBookedData[dateFromServer] = true;
+                });
+            },
+            error: (err) => console.log('err: ', err)
+        }).done(() => {
+            console.log('realBookedData: ', realBookedData);
+            new Promise((resolve, reject) => {
+                selected = {};
+                this.setState({
+                    task: 'checkingIn', 
+                    checkin: false, 
+                    checkout: false,
+                    stopCheckoutsHere: false,
+                    startCheckinsHere: false,
+                    currentDate: new Date()
+                });
+                resolve();
+            })
+                .then(() => this.handleDisplayMonth())
+                .then(() => this.props.updateCheckoutState('clearAll'))
+        });   
     }
 
     bookTrip() {
         if (this.state.task !== 'bookingTrip') return
-
         let {checkin, checkout} = this.state;
         if (checkin && checkout) {
             $.ajax({
