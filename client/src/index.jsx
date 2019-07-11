@@ -1,12 +1,3 @@
-const Calendar = require('./components/Calendar.jsx');
-const Guests = require('./components/Guests.jsx');
+const Checkout = require('./components/Checkout.jsx');
 
-const App = () => (
-    <div>
-        <Guests />
-        <hr />
-        <Calendar />
-    </div>
-);
-
-ReactDOM.render(<App />, document.getElementById('checkout-calendar'));
+ReactDOM.render(<Checkout />, document.getElementById('checkout-calendar'));

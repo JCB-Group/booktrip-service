@@ -166,9 +166,14 @@ class Calendar extends React.Component {
                 task
             });
             resolve();
-        }).then(() =>
-            this.handleDisplayMonth()
-        );
+        })
+            .then(this.handleDisplayMonth)
+            .then(() => this.props.updateCheckoutState('checkin', checkin))
+            .then(() => {
+                if (checkin && checkout) {
+                    this.props.updateCheckoutState('trip', selected)
+                }
+            })
     }
 
     handleCheckOut(date) {
@@ -197,7 +202,14 @@ class Calendar extends React.Component {
                 task
             });
             resolve();
-        }).then(() => this.handleDisplayMonth());
+        })
+            .then(() => this.handleDisplayMonth())
+            .then(() => this.props.updateCheckoutState('checkout', checkout))
+            .then(() => {
+                if (checkin && checkout) {
+                    this.props.updateCheckoutState('trip', selected)
+                }
+            })
 
     }
 
@@ -214,6 +226,7 @@ class Calendar extends React.Component {
             });
             resolve();
         }).then(() => this.handleDisplayMonth())
+        .then(() => this.props.updateCheckoutState('clearAll'))
         
     }
 
@@ -228,6 +241,8 @@ class Calendar extends React.Component {
                 data: selected,
                 success: (response) => console.log(`success: `, response),
                 error: (err) => console.log('err ', err)
+            }).done(() => {
+                this.props.updateCheckoutState('trip', selected)
             });
         }
     }
@@ -247,30 +262,27 @@ class Calendar extends React.Component {
                 <table>
                     {this.state.displayMonth.map((week) => 
                         <tr>
-                            {week.map(day =>    <th 
-                                                    class={getClasses(day, this.state.task)}
-                                                    onClick={() => {
-                                                        if (day === null) return
-                                                        if (this.state.task === 'checkingIn') {
-                                                            if (day.canCheckIn) {
-                                                                this.handleCheckIn(day.date);
-                                                            }
-                                                        } else if (this.state.task === 'checkingOut') {
-                                                            if (day.canCheckOut) {
-                                                                this.handleCheckOut(day.date);
-                                                            }
-                                                        }
-                                                    }}
-                                                >
-                                {day === null ? '-' : day.date.getDate()}
-                            </th>)}
+                            {week.map(day =>    
+                            <th class={getClasses(day, this.state.task)}
+                                onClick={() => {
+                                    if (day === null) return
+                                    if (this.state.task === 'checkingIn') {
+                                        if (day.canCheckIn) {
+                                            this.handleCheckIn(day.date);
+                                        }
+                                    } else if (this.state.task === 'checkingOut') {
+                                        if (day.canCheckOut) {
+                                            this.handleCheckOut(day.date);
+                                        }
+                                    }
+                            }}>{day === null ? '-' : day.date.getDate()}</th>)}
                         </tr>
                     )}
                 </table>
-                <button onClick={() => console.log(this.state.displayMonth)}>Log Month</button>
+                {/* <button onClick={() => console.log(this.state.displayMonth)}>Log Month</button>
                 <button onClick={() => console.log(this.state)}>Log State</button>
-                <br />
-                <button onClick={this.bookTrip}>Book Trip</button>
+                <br /> */}
+                {/* <button onClick={this.bookTrip}>Book Trip</button> */}
             </div>
         );
     }

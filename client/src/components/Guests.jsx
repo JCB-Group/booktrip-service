@@ -1,8 +1,3 @@
-//max:
-    // children + adults <= max
-    // infants: 0-5 always
-
-
 class Guests extends React.Component {
     constructor(props) {
         super(props);
