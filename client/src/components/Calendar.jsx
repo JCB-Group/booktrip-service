@@ -27,7 +27,8 @@ class Calendar extends React.Component {
             checkin: false,
             checkout: false,
             stopCheckoutsHere: false,
-            startCheckinsHere: false
+            startCheckinsHere: false,
+            //Todo: min stay
         }
         this.handleDisplayMonth = this.handleDisplayMonth.bind(this);
         this.startCheckIn = this.startCheckIn.bind(this);
@@ -91,7 +92,6 @@ class Calendar extends React.Component {
                 canCheckOut = (date - new Date()) <= 0 === false;
             }
 
-            
             if (canCheckIn) {
                 canCheckIn = !realBookedData[new Date(currentYear, currentMonth, day)];
                 if (startCheckinsHere && canCheckIn) {

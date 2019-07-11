@@ -22,6 +22,7 @@ th {
 
 .canHover:hover {
     background-color: lightblue;
+    cursor: pointer;
 }
 
 .strikethru {
