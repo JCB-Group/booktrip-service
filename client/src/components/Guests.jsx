@@ -5,8 +5,13 @@ class Guests extends React.Component {
             max: 5,
             adults: 1,
             children: 0,
-            infants: 0
+            infants: 0,
+            display: false
         }
+        this.handleDisplayToggle = this.handleDisplayToggle.bind(this);
+        this.handleAdult = this.handleAdult.bind(this);
+        this.handleChildren = this.handleChildren.bind(this);
+        this.handleInfants = this.handleInfants.bind(this);
     }
 
     handleAdult(change) {
@@ -61,10 +66,15 @@ class Guests extends React.Component {
         }
     }
 
+    handleDisplayToggle() {
+        let {display} = this.state;
+        this.setState({display: !display});
+    }
+
     render() {
         let guests = this.state.adults + this.state.children;
         let noun = guests === 1 ? 'guest' : 'guests';
-        const {max, adults, children, infants} = this.state;
+        const {max, adults, children, infants, display} = this.state;
 
         const disableDecrementAdults = adults === 1;
         const disableIncrementAdults = guests === max;
@@ -75,23 +85,37 @@ class Guests extends React.Component {
         const disableDecrementInfants = infants === 0;
         const disableIncrementInfants = infants === 5;
 
+
+        let guestsNoun = guests === 1 ? 'guest' : 'guests';
+        let displayInfants = '';
+        if (infants) {
+            let infantsNoun = infants === 1 ? 'infant' : 'infants';
+            displayInfants = `, ${infants} ${infantsNoun}`;
+        }
+        let displayGuests = guests + ' ' + guestsNoun + displayInfants;
+
+        let newDisplay = display ? 'block' : 'none';
+        let style = {display: newDisplay};
+
         return (
             <div>
-                <p>{`${guests} ${noun}`}</p>
-                <div>
-                    <button disabled={disableDecrementAdults} onClick={() => this.handleAdult(-1)}>-</button>
-                    <span> Adults: {adults} </span>
-                    <button disabled={disableIncrementAdults} onClick={() => this.handleAdult(1)}>+</button>
-                </div>
-                <div>
-                    <button disabled={disableDecrementChildren} onClick={() => this.handleChildren(-1)}>-</button>
-                    <span> Children: {children} </span>
-                    <button disabled={disableIncrementChildren} onClick={() => this.handleChildren(1)}>+</button>
-                </div>
-                <div>
-                    <button disabled={disableDecrementInfants} onClick={() => this.handleInfants(-1)}>-</button>
-                    <span> Infants: {infants} </span>
-                    <button disabled={disableIncrementInfants} onClick={() => this.handleInfants(1)}>+</button>
+                <p onClick={this.handleDisplayToggle}>{displayGuests}</p>
+                <div id='container' style={style}>
+                    <div>
+                        <button disabled={disableDecrementAdults} onClick={() => this.handleAdult(-1)}>-</button>
+                        <span> Adults: {adults} </span>
+                        <button disabled={disableIncrementAdults} onClick={() => this.handleAdult(1)}>+</button>
+                    </div>
+                    <div>
+                        <button disabled={disableDecrementChildren} onClick={() => this.handleChildren(-1)}>-</button>
+                        <span> Children: {children} </span>
+                        <button disabled={disableIncrementChildren} onClick={() => this.handleChildren(1)}>+</button>
+                    </div>
+                    <div>
+                        <button disabled={disableDecrementInfants} onClick={() => this.handleInfants(-1)}>-</button>
+                        <span> Infants: {infants} </span>
+                        <button disabled={disableIncrementInfants} onClick={() => this.handleInfants(1)}>+</button>
+                    </div>
                 </div>
             </div>
         );

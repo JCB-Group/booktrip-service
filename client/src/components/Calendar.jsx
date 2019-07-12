@@ -22,7 +22,7 @@ class Calendar extends React.Component {
         this.state = {
             currentDate: new Date(),
             displayMonth: [],
-            task: 'checkingIn', //checkingIn, checkingOut, or bookingTrip
+            task: 'bookingTrip', //checkingIn, checkingOut, or bookingTrip
             checkin: false,
             checkout: false,
             stopCheckoutsHere: false,
@@ -130,11 +130,21 @@ class Calendar extends React.Component {
     }
 
     startCheckIn() {
-        this.setState({task: 'checkingIn'});
+        let {task} = this.state;
+        if (task === 'checkingIn') {
+            this.setState({task: 'bookingTrip'});
+        } else {
+            this.setState({task: 'checkingIn'});
+        }
     }
 
     startCheckOut() {
-        this.setState({task: 'checkingOut'});
+        let {task} = this.state;
+        if (task === 'checkingOut') {
+            this.setState({task: 'bookingTrip'});
+        } else {
+            this.setState({task: 'checkingOut'});
+        }
     }
 
     handleCheckIn(date) {
@@ -260,36 +270,44 @@ class Calendar extends React.Component {
     }
 
     render() {
+        const display = this.state.task === 'bookingTrip' ? 'none' : 'block';
+        const style = {display, ['z-index']: 5};
+
+        const {checkin, checkout} = this.state;
+
+        let checkinDate = '';
+        if (checkin) { checkinDate = `${checkin.getMonth()}/${checkin.getDate()}/${JSON.stringify(checkin.getYear()).slice(1)}` }
+
+        let checkoutDate = '';
+        if (checkout) { checkoutDate = `${checkout.getMonth()}/${checkout.getDate()}/${JSON.stringify(checkout.getYear()).slice(1)}` }
+        
         return (
             <div>
-                <button onClick={() => this.handleDisplayMonth(-1)}>Prev</button>
-                <button onClick={() => this.handleDisplayMonth(1)}>Next</button>
-                <br /><br />
-                <button onClick={this.startCheckIn}>Check In</button>
-                <button onClick={this.startCheckOut}>Check Out</button>
-                <br /><br />
-                <p>Current Month: {this.state.currentDate.getMonth() + 1}/{this.state.currentDate.getFullYear()}</p>
-                <p>Task: {this.state.task}</p>
-                <button onClick={this.clearDates}>Clear Dates</button>
-                <table>
+                <button onClick={this.startCheckIn}>Check In: {checkinDate}</button>
+                <button onClick={this.startCheckOut}>Check Out: {checkoutDate}</button>
+                <table style={style}>
+                    <p>Current Month: {this.state.currentDate.getMonth() + 1}/{this.state.currentDate.getFullYear()}</p>
+                    <button onClick={() => this.handleDisplayMonth(-1)}>Prev</button>
+                    <button onClick={() => this.handleDisplayMonth(1)}>Next</button>
                     {this.state.displayMonth.map((week) => 
                         <tr>
                             {week.map(day =>    
                             <th class={getClasses(day, this.state.task)}
-                                onClick={() => {
-                                    if (day === null) return
-                                    if (this.state.task === 'checkingIn') {
-                                        if (day.canCheckIn) {
-                                            this.handleCheckIn(day.date);
-                                        }
-                                    } else if (this.state.task === 'checkingOut') {
-                                        if (day.canCheckOut) {
-                                            this.handleCheckOut(day.date);
-                                        }
+                            onClick={() => {
+                                if (day === null) return
+                                if (this.state.task === 'checkingIn') {
+                                    if (day.canCheckIn) {
+                                        this.handleCheckIn(day.date);
                                     }
-                            }}>{day === null ? '-' : day.date.getDate()}</th>)}
+                                } else if (this.state.task === 'checkingOut') {
+                                    if (day.canCheckOut) {
+                                        this.handleCheckOut(day.date);
+                                    }
+                                }
+                            }}>{day === null ? '' : day.date.getDate()}</th>)}
                         </tr>
                     )}
+                    <button onClick={this.clearDates}>Clear Dates</button>
                 </table>
                 {/* <button onClick={() => console.log(this.state.displayMonth)}>Log Month</button>
                 <button onClick={() => console.log(this.state)}>Log State</button>

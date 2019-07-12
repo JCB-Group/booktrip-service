@@ -1,5 +1,5 @@
 const getClasses = (day, task) => {
-    if (day === null) return
+    if (day === null) return 'invalid'
     if (day.isSelected) return 'isSelected'
     if (task === 'checkingIn') {
         if (!day.canCheckIn || day.isBooked) return 'strikethru'

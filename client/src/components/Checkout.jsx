@@ -4,6 +4,12 @@ const $ = require('jquery');
 const Calendar = require('./Calendar.jsx');
 const Guests = require('./Guests.jsx');
 
+const fakeFees = {
+    tax: 0.13,      //depends on location
+    cleaning: 100,  //dynamic
+    service: .1,    //fixed, round up to nearest dollar
+}
+
 class Checkout extends React.Component {
     constructor(props) {
         super(props);
@@ -61,6 +67,7 @@ class Checkout extends React.Component {
         let nights;
         if (trip) { nights = Object.keys(trip).length - 1 }
         let nightsNoun = nights === 1 ? 'night' : 'nights';
+        
         let numGuests = guests.adults + guests.children;
         let guestsNoun = numGuests === 1 ? 'guest' : 'guests';
         let infants = '';
@@ -69,35 +76,32 @@ class Checkout extends React.Component {
             let infantsNoun = infants === 1 ? 'infant' : 'infants';
             infants = `, ${infants} ${infantsNoun}`;
         }
+        let displayGuests = numGuests + ' ' + guestsNoun + infants;
 
         let nightsTotal = price * nights;
         
-        let displayGuests = numGuests + ' ' + guestsNoun + infants;
         let displayNights = `${price} x ${nights + ' ' + nightsNoun} ... total: ${nightsTotal}`;
-        let finalTotal = `Total: ${nightsTotal}`;
+
+        let cleaning = fakeFees.cleaning;
+        let displayCleaning = `Cleaning: $${cleaning}`;
+
+        let finalTotal = `Total: ${nightsTotal + cleaning}`;
 
         return (
             <div>
                 <h3>Checkout Component</h3>
+                <hr />
                 <p>Price: {price}</p>
-                <div>
-                    <p>Checkin: {checkinDate}</p>
-                    <p>Checkout: {checkoutDate}</p>
-                </div>
+                <Calendar updateCheckoutState={this.updateCheckoutState} />
+                <Guests updateCheckoutState={this.updateCheckoutState} />
                 <div style={style} id='ledger'>
-                    <p>{displayGuests}</p>
                     <p>{displayNights}</p>
+                    <p>{displayCleaning}</p>
                     <p>{finalTotal}</p>
                 </div>
+                <button style={{display: 'block'}} onClick={this.bookTrip}>Book Trip</button>
+                <hr />
                 <button onClick={() => console.log('Checkout state: ', this.state)}>Log Checkout State</button>
-                <br />
-                <button onClick={this.bookTrip}>Book Trip</button>
-                <hr />
-                <h3>Guests Component</h3>
-                <Guests updateCheckoutState={this.updateCheckoutState} />
-                <hr />
-                <h3 >Calendar Component</h3>
-                <Calendar updateCheckoutState={this.updateCheckoutState} />
             </div>
         );
     }
