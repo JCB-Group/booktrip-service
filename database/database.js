@@ -8,7 +8,7 @@ db.once('open', function() {
 });
 
 var bookingSchema = new mongoose.Schema({
-    date: {type: String, unique: true}
+    date: {type: String}
   });
 
 const Booking = mongoose.model('Bookings', bookingSchema);

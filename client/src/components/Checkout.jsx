@@ -1,5 +1,6 @@
 const _ = require('underscore');
 const $ = require('jquery');
+const commaSeparateNumber = require('../helpers/commaSeparateNumber.js');
 
 const Calendar = require('./Calendar.jsx');
 const Guests = require('./Guests.jsx');
@@ -58,11 +59,7 @@ class Checkout extends React.Component {
         const displayLedger = !trip ? 'none' : 'block';
         let style = {display: displayLedger};
 
-        let checkinDate = '';
-        if (checkin) { checkinDate = `${checkin.getMonth()}/${checkin.getDate()}/${JSON.stringify(checkin.getYear()).slice(1)}` }
-
-        let checkoutDate = '';
-        if (checkout) { checkoutDate = `${checkout.getMonth()}/${checkout.getDate()}/${JSON.stringify(checkout.getYear()).slice(1)}` }
+        let displayPrice = `$${commaSeparateNumber(price)}`;
 
         let nights;
         if (trip) { nights = Object.keys(trip).length - 1 }
@@ -87,19 +84,25 @@ class Checkout extends React.Component {
 
         let finalTotal = `Total: ${nightsTotal + cleaning}`;
 
+        const containerStyle = {
+            width: '300px'
+        }
+
         return (
-            <div>
-                <h3>Checkout Component</h3>
-                <hr />
-                <p>Price: {price}</p>
+            <div style={containerStyle} class='container'>
+                <p>{displayPrice}<span style={{['font-size']: '11px'}}> / night</span></p>
                 <Calendar updateCheckoutState={this.updateCheckoutState} />
-                <Guests updateCheckoutState={this.updateCheckoutState} />
+                <br />
+                <Guests style={{clear: 'both'}} updateCheckoutState={this.updateCheckoutState} />
                 <div style={style} id='ledger'>
                     <p>{displayNights}</p>
+                    <hr />
                     <p>{displayCleaning}</p>
+                    <hr />
                     <p>{finalTotal}</p>
                 </div>
                 <button style={{display: 'block'}} onClick={this.bookTrip}>Book Trip</button>
+
                 <hr />
                 <button onClick={() => console.log('Checkout state: ', this.state)}>Log Checkout State</button>
             </div>

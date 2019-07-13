@@ -165,7 +165,7 @@ class Calendar extends React.Component {
             selected = Object.assign(selected, getDatesBetween(checkin, checkout));
         }
 
-        const task = this.state.checkout ? 'bookingTrip' : 'checkingOut';
+        const task = checkout ? 'bookingTrip' : 'checkingOut';
 
         new Promise((resolve, reject) => {
             this.setState({
@@ -281,10 +281,12 @@ class Calendar extends React.Component {
         let checkoutDate = '';
         if (checkout) { checkoutDate = `${checkout.getMonth()}/${checkout.getDate()}/${JSON.stringify(checkout.getYear()).slice(1)}` }
         
+
+
         return (
             <div>
-                <button onClick={this.startCheckIn}>Check In: {checkinDate}</button>
-                <button onClick={this.startCheckOut}>Check Out: {checkoutDate}</button>
+                <button style={{float: 'left'}} onClick={this.startCheckIn}>Check In: {checkinDate}</button>
+                <button style={{float: 'right'}} onClick={this.startCheckOut}>Check Out: {checkoutDate}</button>
                 <table style={style}>
                     <p>Current Month: {this.state.currentDate.getMonth() + 1}/{this.state.currentDate.getFullYear()}</p>
                     <button onClick={() => this.handleDisplayMonth(-1)}>Prev</button>
