@@ -95,18 +95,38 @@ class Guests extends React.Component {
         let displayGuests = guests + ' ' + guestsNoun + displayInfants;
 
         let newDisplay = display ? 'block' : 'none';
-        let style = {display: newDisplay};
+        let dropDownStyle = {
+            display: newDisplay,
+            width: '300px',
+            position: 'absolute',
+            backgroundColor: 'white',
+            border: '1px solid black'
+        };
+
+        const containerStyle = {
+            width: '100%',
+            justifyContent: 'center'
+        }
+
+        const displayGuestsStyle = {
+            width: '100%',
+            border: '1px solid lightgrey',
+            padding: '5px'
+        };
 
         return (
-            <div>
-                <p onClick={this.handleDisplayToggle}>{displayGuests}</p>
-                <div id='container' style={style}>
-                    <div>
-                        <button disabled={disableDecrementAdults} onClick={() => this.handleAdult(-1)}>-</button>
-                        <span> Adults: {adults} </span>
-                        <button disabled={disableIncrementAdults} onClick={() => this.handleAdult(1)}>+</button>
+            <div style={containerStyle}>
+                <p style={displayGuestsStyle} onClick={this.handleDisplayToggle}>{displayGuests}</p>
+                <div id='container' style={dropDownStyle}>
+                    <div style={{clear: 'both'}}>
+                        <span style={{float: 'left'}}> Adults: </span>
+                        <span style={{float: 'right'}}>
+                            <button disabled={disableDecrementAdults} onClick={() => this.handleAdult(-1)}>-</button>
+                            <span>{adults}</span>
+                            <button disabled={disableIncrementAdults} onClick={() => this.handleAdult(1)}>+</button>
+                        </span>
                     </div>
-                    <div>
+                    <div style={{clear: 'both'}}>
                         <button disabled={disableDecrementChildren} onClick={() => this.handleChildren(-1)}>-</button>
                         <span> Children: {children} </span>
                         <button disabled={disableIncrementChildren} onClick={() => this.handleChildren(1)}>+</button>

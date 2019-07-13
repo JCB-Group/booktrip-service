@@ -75,14 +75,18 @@ class Checkout extends React.Component {
         }
         let displayGuests = numGuests + ' ' + guestsNoun + infants;
 
-        let nightsTotal = price * nights;
-        
-        let displayNights = `${price} x ${nights + ' ' + nightsNoun} ... total: ${nightsTotal}`;
+        let nightsTotal = commaSeparateNumber(price * nights);
+
+        let displayNightsLeft = `${price} x ${nights + ' ' + nightsNoun}`;
+        let displayNightsRight = `$${nightsTotal}`;
 
         let cleaning = fakeFees.cleaning;
-        let displayCleaning = `Cleaning: $${cleaning}`;
+        let displayCleaningRight = '$' + commaSeparateNumber(cleaning);
 
-        let finalTotal = `Total: ${nightsTotal + cleaning}`;
+        let finalTotal = nightsTotal + cleaning;
+
+
+        finalTotal = '$' + commaSeparateNumber(price * nights + fakeFees.cleaning);
 
         const containerStyle = {
             width: '300px'
@@ -92,19 +96,24 @@ class Checkout extends React.Component {
             <div style={containerStyle} class='container'>
                 <p>{displayPrice}<span style={{['font-size']: '11px'}}> / night</span></p>
                 <Calendar updateCheckoutState={this.updateCheckoutState} />
-                <br />
                 <Guests style={{clear: 'both'}} updateCheckoutState={this.updateCheckoutState} />
                 <div style={style} id='ledger'>
-                    <p>{displayNights}</p>
-                    <hr />
-                    <p>{displayCleaning}</p>
-                    <hr />
-                    <p>{finalTotal}</p>
+                    <p style={{clear: 'both'}}>
+                        <span style={{float: 'left'}}>{displayNightsLeft}</span>
+                        <span style={{float: 'right'}}>{displayNightsRight}</span>
+                    </p>
+                    <p style={{clear: 'both'}}>
+                        <span style={{float: 'left'}}>Cleaning fee</span>
+                        <span style={{float: 'right'}}>{displayCleaningRight}</span>
+                    </p>
+                    <p style={{clear: 'both'}}>
+                        <span style={{float: 'left'}}>Total</span>
+                        <span style={{float: 'right'}}>{finalTotal}</span>
+                    </p>
                 </div>
-                <button style={{display: 'block'}} onClick={this.bookTrip}>Book Trip</button>
-
-                <hr />
-                <button onClick={() => console.log('Checkout state: ', this.state)}>Log Checkout State</button>
+                <button style={{display: 'block', clear: 'both'}} onClick={this.bookTrip}>Book Trip</button>
+                {/* <hr />
+                <button onClick={() => console.log('Checkout state: ', this.state)}>Log Checkout State</button> */}
             </div>
         );
     }

@@ -5,16 +5,9 @@ const getDatesBetween = require('../helpers/getDatesBetween.js');
 const _ = require('underscore');
 const $ = require('jquery');
 
-let style = {
-
-};
-
-
-
 let realBookedData = {};
-
 let selected = {};
-let testSelected = {};
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 class Calendar extends React.Component {
     constructor(props) {
@@ -32,6 +25,7 @@ class Calendar extends React.Component {
         this.handleDisplayMonth = this.handleDisplayMonth.bind(this);
         this.startCheckIn = this.startCheckIn.bind(this);
         this.startCheckOut = this.startCheckOut.bind(this);
+        this.startBookTrip = this.startBookTrip.bind(this);
         this.clearDates = this.clearDates.bind(this);
         this.bookTrip = this.bookTrip.bind(this);
     }
@@ -147,6 +141,10 @@ class Calendar extends React.Component {
         }
     }
 
+    startBookTrip() {
+        this.setState({task: 'bookingTrip'});
+    }
+
     handleCheckIn(date) {
         if (this.state.task !== 'checkingIn') return null
         let checkin = date;
@@ -198,7 +196,6 @@ class Calendar extends React.Component {
         } else {
             selected = {[checkin]: true, [checkout]: true}
             selected = Object.assign(selected, getDatesBetween(checkin, checkout));
-            // debugger;
         }
 
         const task = this.state.checkin ? 'bookingTrip' : 'checkingIn';
@@ -219,7 +216,6 @@ class Calendar extends React.Component {
                     this.props.updateCheckoutState('trip', selected)
                 }
             })
-
     }
 
     clearDates() {
@@ -271,9 +267,16 @@ class Calendar extends React.Component {
 
     render() {
         const display = this.state.task === 'bookingTrip' ? 'none' : 'block';
-        const style = {display, ['z-index']: 5};
+        const style = {
+                display, 
+                ['z-index']: 999, 
+                position: 'absolute',
+                backgroundColor: 'white',
+                // top: '75px',
+                border: '1px solid black'
+        };
 
-        const {checkin, checkout} = this.state;
+        const {checkin, checkout, task, currentDate} = this.state;
 
         let checkinDate = '';
         if (checkin) { checkinDate = `${checkin.getMonth()}/${checkin.getDate()}/${JSON.stringify(checkin.getYear()).slice(1)}` }
@@ -281,16 +284,37 @@ class Calendar extends React.Component {
         let checkoutDate = '';
         if (checkout) { checkoutDate = `${checkout.getMonth()}/${checkout.getDate()}/${JSON.stringify(checkout.getYear()).slice(1)}` }
         
+        // window.onclick = function(e) {
+        //     if (task !== 'bookTrip') {
+        //         if(e.target != document.getElementById('cal-area')) {
+        //             // document.getElementById('content-area').innerHTML = 'You clicked outside.';    
+        //             this.setState({task: 'bookingTrip'});
+        //         } else {
+        //             // document.getElementById('content-area').innerHTML = 'Display Contents';   
+        //         }
+        //     }
+        // }
 
+        const displayCheckinCheckoutStyle = {
+            width: '100%',
+            height: '20px',
+            border: '1px solid lightgrey',
+            padding: '5px'
+        };
+
+        let displayMonthAndYear = `${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
 
         return (
             <div>
-                <button style={{float: 'left'}} onClick={this.startCheckIn}>Check In: {checkinDate}</button>
-                <button style={{float: 'right'}} onClick={this.startCheckOut}>Check Out: {checkoutDate}</button>
-                <table style={style}>
-                    <p>Current Month: {this.state.currentDate.getMonth() + 1}/{this.state.currentDate.getFullYear()}</p>
-                    <button onClick={() => this.handleDisplayMonth(-1)}>Prev</button>
-                    <button onClick={() => this.handleDisplayMonth(1)}>Next</button>
+                <div style={displayCheckinCheckoutStyle}>
+                    <span style={{float: 'left'}} onClick={this.startCheckIn}>{checkinDate ? checkinDate : 'Checkin'}</span>
+                    <span style={{float: 'right'}} onClick={this.startCheckOut}>{checkoutDate ? checkoutDate : 'Checkout'}</span>
+                </div>
+                
+                <table id='cal-area' style={style}>
+                    <button style={{display: 'inline'}} onClick={() => this.handleDisplayMonth(-1)}>Prev</button>
+                    <p style={{display: 'inline'}}>{displayMonthAndYear}</p>
+                    <button style={{display: 'inline'}} onClick={() => this.handleDisplayMonth(1)}>Next</button>
                     {this.state.displayMonth.map((week) => 
                         <tr>
                             {week.map(day =>    

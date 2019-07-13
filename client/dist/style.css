@@ -1,19 +1,18 @@
 th, td {
-    border: 1px solid black;
+    outline: 1px solid black;
     border-collapse: collapse;
 }
 
 th, td {
-    padding: 15px;  
+    padding: 10px;  
 }
 
 table {
-    border-spacing: 5px;
+    border-spacing: 0px;
 }
 
 th {
     text-align: center;
-    
 }
 
 .canHover:hover {
@@ -33,7 +32,7 @@ th {
 }
 
 .invalid {
-    border: none;
+    outline: none;
 }
 
 body {
