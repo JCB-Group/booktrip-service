@@ -303,12 +303,14 @@ class Calendar extends React.Component {
         };
 
         let displayMonthAndYear = `${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+        let checkinBackgroundColor = task === 'checkingIn' ? 'lightblue' : 'white';
+        let checkoutBackgroundColor = task === 'checkingOut' ? 'lightblue' : 'white';
 
         return (
             <div>
                 <div style={displayCheckinCheckoutStyle}>
-                    <span style={{float: 'left'}} onClick={this.startCheckIn}>{checkinDate ? checkinDate : 'Checkin'}</span>
-                    <span style={{float: 'right'}} onClick={this.startCheckOut}>{checkoutDate ? checkoutDate : 'Checkout'}</span>
+                    <span style={{float: 'left', ['background-color']: checkinBackgroundColor}} onClick={this.startCheckIn}>{checkinDate ? checkinDate : 'Checkin'}</span>
+                    <span style={{float: 'right', ['background-color']: checkoutBackgroundColor}} onClick={this.startCheckOut}>{checkoutDate ? checkoutDate : 'Checkout'}</span>
                 </div>
                 
                 <table id='cal-area' style={style}>

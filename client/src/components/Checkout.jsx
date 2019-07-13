@@ -11,6 +11,18 @@ const fakeFees = {
     service: .1,    //fixed, round up to nearest dollar
 }
 
+const bookTripStyle = {
+    width: '100%',
+    display: 'block', 
+    clear: 'both',
+    color: 'white',
+    ['background-color']: '#fe001a',
+    ['border-radius']: '15px',
+    ['font-size']: '13px',
+    padding: '10px',
+    border: 'none'
+}
+
 class Checkout extends React.Component {
     constructor(props) {
         super(props);
@@ -111,7 +123,7 @@ class Checkout extends React.Component {
                         <span style={{float: 'right'}}>{finalTotal}</span>
                     </p>
                 </div>
-                <button style={{display: 'block', clear: 'both'}} onClick={this.bookTrip}>Book Trip</button>
+                <button style={bookTripStyle} onClick={this.bookTrip}>Book Trip</button>
                 {/* <hr />
                 <button onClick={() => console.log('Checkout state: ', this.state)}>Log Checkout State</button> */}
             </div>
