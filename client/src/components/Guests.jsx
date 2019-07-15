@@ -73,7 +73,6 @@ class Guests extends React.Component {
 
     render() {
         let guests = this.state.adults + this.state.children;
-        let noun = guests === 1 ? 'guest' : 'guests';
         const {max, adults, children, infants, display} = this.state;
 
         const disableDecrementAdults = adults === 1;

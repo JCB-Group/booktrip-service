@@ -124,8 +124,6 @@ class Checkout extends React.Component {
                     </p>
                 </div>
                 <button style={bookTripStyle} onClick={this.bookTrip}>Book Trip</button>
-                {/* <hr />
-                <button onClick={() => console.log('Checkout state: ', this.state)}>Log Checkout State</button> */}
             </div>
         );
     }
