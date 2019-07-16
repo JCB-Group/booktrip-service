@@ -33,7 +33,7 @@ class Calendar extends React.Component {
     componentDidMount() {
         $.ajax({
             method: 'get',
-            url: '/dates',
+            url: '/rooms/dates',
             success: (res) => {
                 _.each(res, (nested) => {
                     let str = nested.date;
@@ -221,7 +221,7 @@ class Calendar extends React.Component {
     clearDates() {
         $.ajax({
             method: 'get',
-            url: '/dates',
+            url: '/rooms/dates',
             success: (res) => {
                 _.each(res, (nested) => {
                     let str = nested.date;
@@ -255,7 +255,7 @@ class Calendar extends React.Component {
         if (checkin && checkout) {
             $.ajax({
                 method: 'post',
-                url: '/',
+                url: '/rooms/dates',
                 data: selected,
                 success: (response) => console.log(`success: `, response),
                 error: (err) => console.log('err ', err)
@@ -267,13 +267,28 @@ class Calendar extends React.Component {
 
     render() {
         const display = this.state.task === 'bookingTrip' ? 'none' : 'block';
-        const style = {
-                display, 
-                ['z-index']: 999, 
-                position: 'absolute',
-                backgroundColor: 'white',
-                // top: '75px',
-                border: '1px solid black'
+        
+        const table = {
+            display, 
+            ['z-index']: 999, 
+            position: 'absolute',
+            backgroundColor: 'white',
+            // top: '75px',
+            border: '1px solid black',
+            ['border-spacing']: '0px'
+        };
+
+        const th = {
+            ['text-align']: 'center',
+            outline: '1px solid black',
+            ['border-collapse']: 'collapse',
+            ['padding']: '10px'
+        };
+
+        const td = {
+                outline: '1px solid black',
+                ['border-collapse']: 'collapse',
+                ['padding']: '10px'
         };
 
         const {checkin, checkout, task, currentDate} = this.state;
@@ -313,14 +328,14 @@ class Calendar extends React.Component {
                     <span style={{float: 'right', ['background-color']: checkoutBackgroundColor}} onClick={this.startCheckOut}>{checkoutDate ? checkoutDate : 'Checkout'}</span>
                 </div>
                 
-                <table id='cal-area' style={style}>
+                <table id='cal-area' style={table}>
                     <button style={{display: 'inline'}} onClick={() => this.handleDisplayMonth(-1)}>Prev</button>
                     <p style={{display: 'inline'}}>{displayMonthAndYear}</p>
                     <button style={{display: 'inline'}} onClick={() => this.handleDisplayMonth(1)}>Next</button>
                     {this.state.displayMonth.map((week) => 
                         <tr>
-                            {week.map(day =>    
-                            <th class={getClasses(day, this.state.task)}
+                            {week.map(day =>
+                            <td style={td} class={getClasses(day, this.state.task)}
                             onClick={() => {
                                 if (day === null) return
                                 if (this.state.task === 'checkingIn') {
@@ -332,15 +347,11 @@ class Calendar extends React.Component {
                                         this.handleCheckOut(day.date);
                                     }
                                 }
-                            }}>{day === null ? '' : day.date.getDate()}</th>)}
+                            }}>{day === null ? '' : day.date.getDate()}</td>)}
                         </tr>
                     )}
                     <button onClick={this.clearDates}>Clear Dates</button>
                 </table>
-                {/* <button onClick={() => console.log(this.state.displayMonth)}>Log Month</button>
-                <button onClick={() => console.log(this.state)}>Log State</button>
-                <br /> */}
-                {/* <button onClick={this.bookTrip}>Book Trip</button> */}
             </div>
         );
     }

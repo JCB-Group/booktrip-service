@@ -56,7 +56,7 @@ class Checkout extends React.Component {
         if (checkin && checkout && trip) {
             $.ajax({
                 method: 'post',
-                url: '/',
+                url: '/rooms/dates',
                 data: trip,
                 success: (response) => console.log(`success: `, response),
                 error: (err) => console.log('err ', err)
@@ -101,7 +101,9 @@ class Checkout extends React.Component {
         finalTotal = '$' + commaSeparateNumber(price * nights + fakeFees.cleaning);
 
         const containerStyle = {
-            width: '300px'
+            width: '300px',
+            ['font-family']: 'Arial, Helvetica, sans-serif',
+            ['font-weight']: 'lighter'
         }
 
         return (

@@ -20,7 +20,7 @@ const bookNewTrip = (dates) => {
       let saveThisDate = new Booking({date});
       saveThisDate.save((err, success) => {
         if (err) {reject(err)}
-        resolve(success)
+        else {resolve(success)}
       });
     })
   }));
