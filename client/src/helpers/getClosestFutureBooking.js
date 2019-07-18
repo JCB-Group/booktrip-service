@@ -16,4 +16,3 @@ const getClosestFutureBooking = (collection, ref) => {
 };
 
 module.exports = getClosestFutureBooking;
-

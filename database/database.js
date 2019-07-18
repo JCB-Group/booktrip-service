@@ -1,5 +1,8 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/checkout-calendar', {useNewUrlParser: true});
+
+const mongoDomain = '172.17.0.4';
+
+mongoose.connect(`mongodb://${mongoDomain}/checkout-calendar`, {useNewUrlParser: true});
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
